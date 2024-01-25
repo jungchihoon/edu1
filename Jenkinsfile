@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 pipeline { 
     environment { 
         repository = "giglepeople/edu1"  //docker hub id와 repository 이름
