@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 pipeline { 
     environment { 
         repository = "giglepeople/edu1"  //docker hub id와 repository 이름
@@ -32,4 +33,15 @@ pipeline {
           }
       } 
   }
+=======
+properties([pipelineTriggers([githubPush()])])
+
+pipeline {
+    environment {
+        // Global 변수 선언
+        dockerRepo = "giglepeople/edu1"
+        dockerCredentials = 'Chris_docker'
+        dockerImageVersioned = ""
+        dockerImageLatest = ""
+>>>>>>> e344ac16ebd1383ea8301a6082ee5e7942a93b4e
     }
