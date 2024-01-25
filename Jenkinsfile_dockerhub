@@ -1,7 +1,7 @@
 def label = "agent-${UUID.randomUUID().toString()}"
 def gitBranch = 'master'
 def docker_registry = "docker.io"  
-def imageName = "shclub/edu1"
+def imageName = "giglepeople/edu1"
 
 def TAG = getTag(gitBranch)
 
@@ -20,7 +20,7 @@ podTemplate(label: label, serviceAccount: 'jenkins-admin', namespace: 'edu30',
        stage('Clone Git Project') {
             sh "pwd"
             echo 'Clone'
-            git branch: 'master', credentialsId: 'github_ci', url: 'https://github.com/shclub/edu1.git'
+            git branch: 'master', credentialsId: 'Chris', url: 'https://github.com/jungchihoon/edu1.git'
             sh "ls"
         }
                              // podman login -u ${USERNAME} -p ${PASSWORD} --log-level=debug ${docker_registry} --tls-verify=false

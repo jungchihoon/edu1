@@ -1,56 +1,35 @@
-properties([pipelineTriggers([githubPush()])])
-
-pipeline {
-    environment {
-        // Global 변수 선언
-        dockerRepo = "shclub/edu1"
-        dockerCredentials = 'docker_ci'
-        dockerImageVersioned = ""
-        dockerImageLatest = ""
+pipeline { 
+    environment { 
+        repository = "giglepeople/edu1"  //docker hub id와 repository 이름
+        DOCKERHUB_CREDENTIALS = credentials('Chris_docker') // jenkins에 등록해 놓은 docker hub credentials 이름
+        dockerImage = '' 
+  }
+  agent any 
+  stages { 
+      stage('Building our image') { 
+          steps { 
+              script { 
+                  sh "cp /var/lib/jenkins/workspace/sue_jenkins_project/build/libs/sue-member-0.0.1-SNAPSHOT.war /var/lib/jenkins/workspace/pipeline/" // war 파일을 현재 위치로 복사 
+                  dockerImage = docker.build repository + ":$BUILD_NUMBER" 
+              }
+          } 
+      }
+      stage('Login'){
+          steps{
+              sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin' // docker hub 로그인
+          }
+      }
+      stage('Deploy our image') { 
+          steps { 
+              script {
+                sh 'docker push $repository:$BUILD_NUMBER' //docker push
+              } 
+          }
+      } 
+      stage('Cleaning up') { 
+		  steps { 
+              sh "docker rmi $repository:$BUILD_NUMBER" // docker image 제거
+          }
+      } 
+  }
     }
-
-    agent any
-
-    stages {
-        /* checkout repo */
-        stage('Checkout SCM') {
-            steps{
-                script{
-                    checkout scm
-                 }
-            }   
-        }
-        
-        stage("Building docker image"){
-            steps{
-                script{
-                    dockerImageVersioned = docker.build dockerRepo //+ ":$BUILD_NUMBER"
-                    dockerImageLatest = docker.build dockerRepo + ":latest"
-                }
-            }
-        }
-        stage("Pushing image to registry"){
-            steps{
-                script{
-                    // if you want to use custom registry, use the first argument, which is blank in this case
-                    docker.withRegistry( '', dockerCredentials){
-                        dockerImageVersioned.push()
-                        dockerImageLatest.push()
-                    }
-                }
-            }
-        }
-        stage('Cleaning up') {
-            steps {
-                sh "docker rmi $dockerRepo"//:$BUILD_NUMBER"
-            }
-        }
-    }
-
-    /* Cleanup workspace */
-    post {
-       always {
-           deleteDir()
-       }
-   }
-}
