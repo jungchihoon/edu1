@@ -7,7 +7,7 @@ pipeline {
         dockerRepo = "edu/edu1"
         // nexus
         //dockerRepo = "edu1"
-        dockerCredentials = 'edu_private_docker_ci'
+        dockerCredentials = 'nexus_ci'
         dockerImageVersioned = ""
         dockerImageLatest = ""
     }
@@ -37,7 +37,7 @@ pipeline {
                 script{
                     // if you want to use custom registry, use the first argument, which is blank in this case
                     // Harbor
-                    docker.withRegistry('https://211.252.85.148:40002', dockerCredentials){
+                    docker.withRegistry('https://211.43.13.165:40010', dockerCredentials){
                     // nexus
                     //docker.withRegistry( 'http://211.252.85.148:40010', dockerCredentials){
                         dockerImageVersioned.push()
