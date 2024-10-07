@@ -27,7 +27,7 @@ jobs:
           # username: ${{ secrets.DOCKER_USERNAME }}
           # password: ${{ secrets.DOCKER_PASSWORD }}
           username: "giglepeople@gmail.com"
-          password: "KUCIC@clgns0904"
+          password: "KUCIC!clgns0904"
       
       - name: Extract metadata (tags, labels) for Docker
         id: meta
